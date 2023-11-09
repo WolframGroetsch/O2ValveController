@@ -74,7 +74,7 @@ void TFTSetup() {
   uint16_t ID = tft.readID();
   if (ID == 0xD3D3) ID = 0x9481;  //force ID if write-only display
   tft.begin(ID);
-  tft.setRotation(3);
+  tft.setRotation(1); //landscape with the USB port on the bottom right side
   tft.fillScreen(BLACK);
   tft.cp437(true);
 
@@ -403,8 +403,8 @@ void ReadTouch() {
 
   if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
     // scale from 0->1023 to tft.width and tft.height
-    int x = map(p.y, TS_MINY, TS_MAXY, 0, tft.width());
-    int y = map(p.x, TS_MAXX, TS_MINX, 0, tft.height());
+    int x = map(p.y, TS_MINY, TS_MAXY, tft.width(), 0);
+    int y = map(p.x, TS_MAXX, TS_MINX, tft.height(), 0);
 
     // decide here in which display mode we are and fire the appropriate touch processing event
     if (dpState == DisplayState::MAIN_EDIT || dpState == DisplayState::MAIN_RUN || dpState == DisplayState::MAIN_SAVELOAD) {
@@ -413,9 +413,9 @@ void ReadTouch() {
       ProcessTimeSelectorTouchEvent(x, y);
     }
 
-    // // Draw spot for debugging
-    // if (((y - 1) > 0) && ((y + 1) < tft.height())) {
-    //   tft.fillCircle(x, y, 1, RED);
-    // }
+     // Draw spot for debugging
+     //if (((y - 1) > 0) && ((y + 1) < tft.height())) {
+     //  tft.fillCircle(x, y, 1, RED);
+     //}
   }
 }
