@@ -32,7 +32,7 @@ class Timepoint {
       }
 #if LOGGING
       Serial.println("TimeUnit Toggled");
-      Serial.println("New unit: " + GetTimeUnitEnumAbbrString(this->timeUnit));
+      //Serial.println("New unit: " + GetTimeUnitEnumAbbrString(this->timeUnit));
 #endif
     }
 
@@ -47,13 +47,16 @@ class Timepoint {
         return;
       }
 
-      // delete all current entries
+      // Cache the current state of the valve. Needed to be able to have no valves toggled at the end. 
+      bool cachedState = this->valves[valveIndex];
+
+      // delete all current entries. This makes sure that only one valve can be on at any time.
       for (int i = 0; i < VALVES; i++) {
         this->valves[i] = false;
       }
 
-      // set the index to the opposite value (toggle)
-      this->valves[valveIndex] = !this->valves[valveIndex];
+      // set the index to the opposite value (toggle) of the cached state.
+      this->valves[valveIndex] = !cachedState; //!this->valves[valveIndex];
 #if LOGGING
       Serial.println("Valve Toggled");
 #endif
